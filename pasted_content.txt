@@ -1,0 +1,1758 @@
+We have I project with 2 sections where one showcase all movies and the other for favorites which the items of movies is added to this section with the like button and save it in the local storage, and the search should show the items searched for and selection with categories : 
+
+
+
+HTML :
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARKX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+   
+   
+     <nav class="navbar">
+        <a href="home.html" class="logo">
+            <img src="https://arkx.group/images/logo/Logo-white.png" alt="ARKX Logo" class="logo-img">
+        </a>
+        <ul class="nav-links">
+            <li><a href="home.html" class="active">Home</a></li>
+            <li class="dropdown">
+                <button class="dropbtn">
+                    Categories
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="#action"><i class="fas fa-bolt"></i> Action</a>
+                    <a href="#comedy"><i class="fas fa-laugh-squint"></i> Comedy</a>
+                    <a href="#drama"><i class="fas fa-theater-masks"></i> Drama</a>
+                </div>
+            </li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="search-container">
+            <input
+                id="id2"
+                type="text"
+                placeholder="Rechercher votre film préféré"
+            >
+            <button id="id3">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </section>
+     <main>
+        <section class="favorites-container" id="favoritesList">
+        </section>
+        <div id="movieModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+        <section class="favorites-container" id="favoritesList1">
+          <h2>Favorite Movies</h2>
+      </section>
+      <div id="movieModal" class="modal hidden">
+          <div class="modal-content">
+              <span class="close-btn">&times;</span>
+              <div id="modalBody"></div>
+          </div>
+      </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                  <a href="home.html" class="logo">
+                    <img src="https://arkx.group/images/logo/Logo-white.png" alt="ARKX Logo" class="logo-img">
+                </a>
+                    <p>Your ultimate destination for movies, TV shows, and entertainment. Stream thousands of titles in HD quality.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/ARKXGroup/" class="social-link facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="https://twitter.com/ARKXGroup" class="social-link twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/arkxgroup/" class="social-link instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.youtube.com/@ARKXGroup" class="social-link youtube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Movies</h3>
+                    <ul>
+                        <li><a href="#">Action Movies</a></li>
+                        <li><a href="#">Comedy Movies</a></li>
+                        <li><a href="#">Drama Movies</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>TV Shows</h3>
+                    <ul>
+                        <li><a href="#">Popular Series</a></li>
+                        <li><a href="#">New Releases</a></li>
+                        <li><a href="#">Documentaries</a></li>
+                        <li><a href="#">Kids Shows</a></li>
+                        <li><a href="#">Anime</a></li>
+                        <li><a href="#">Reality TV</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Account Settings</a></li>
+                        <li><a href="#">Billing</a></li>
+                        <li><a href="#">Technical Support</a></li>
+                        <li><a href="#">Report Issue</a></li>
+                    </ul>
+                  </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ARKX. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                    <a href="#">Accessibility</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- AI Chat Button -->
+    <button class="ai-chat-button" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+        <span class="chat-badge" id="chatBadge" style="display: none;">1</span>
+    </button>
+
+
+    <!-- AI Chat Popup -->
+    <div class="ai-chat-popup" id="aiChatPopup">
+        <div class="chat-popup-header">
+            <h3><i class="fas fa-robot"></i> AI Assistant</h3>
+            <button class="chat-close-btn" onclick="toggleChat()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+       
+        <div class="chat-popup-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+        </div>
+       
+        <div class="chat-popup-input">
+            <div class="chat-input-wrapper">
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Type your message..."
+                    onkeypress="handleChatKeyPress(event)"
+                >
+                <button class="chat-send-btn" id="sendBtn" onclick="sendChatMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="movies.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>
+
+CSS:
+
+/* Modern Movie Cards - Enhanced Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+:root {
+  /* Modern color palette */
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --primary-light: #818cf8;
+  --secondary: #ec4899;
+  --accent: #14b8a6;
+  --dark: #0f172a;
+  --dark-lighter: #1e293b;
+  --gray: #64748b;
+  --gray-light: #e2e8f0;
+  --light: #f8fafc;
+  --white: #ffffff;
+ 
+  /* Gradient colors */
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --gradient-dark: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+ 
+  /* Effects */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.3);
+ 
+  /* Transitions */
+  --transition-fast: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+}
+
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background: var(--dark);
+  color: var(--light);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+
+/* Animated background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(20, 184, 166, 0.08) 0%, transparent 50%);
+  z-index: -1;
+  animation: backgroundFloat 20s ease-in-out infinite;
+}
+
+
+@keyframes backgroundFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-20px, -20px) scale(1.02); }
+  66% { transform: translate(20px, -10px) scale(0.98); }
+}
+
+
+/* Header */
+header {
+  text-align: center;
+  padding: 4rem 2rem 3rem;
+  position: relative;
+}
+
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  margin: 0 0 1rem;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  animation: gradientShift 8s ease infinite;
+}
+
+
+@keyframes gradientShift {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(30deg); }
+}
+
+
+header p {
+  font-size: 1.2rem;
+  color: var(--gray);
+  font-weight: 300;
+  margin: 0;
+}
+
+
+/* Container */
+#favoritesList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2.5rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+/* Movie Card */
+.movie-item {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  transition: var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+
+.movie-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(99, 102, 241, 0.1) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+
+.movie-item:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+
+.movie-item:hover::before {
+  opacity: 1;
+}
+
+
+/* Movie Poster */
+.movie-poster {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  background: var(--gradient-dark);
+}
+
+
+.movie-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-slow);
+  filter: brightness(0.9);
+}
+
+
+.movie-item:hover .movie-poster img {
+  transform: scale(1.1);
+  filter: brightness(1);
+}
+
+
+/* Overlay gradient */
+.movie-poster::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+
+/* Movie Info */
+.movie-info {
+  padding: 2rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+
+.movie-info h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--white);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+
+.director, .genre {
+  font-size: 0.9rem;
+  color: var(--gray);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+.director::before {
+  content: '🎬';
+  font-size: 1.1rem;
+}
+
+
+.genre::before {
+  content: '🎭';
+  font-size: 1.1rem;
+}
+
+
+.description {
+  color: var(--gray-light);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0.5rem 0;
+  opacity: 0.9;
+}
+
+
+/* Actors Section */
+.actors {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.actors h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--primary-light);
+  margin: 0 0 1rem;
+}
+
+
+.actor {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+  margin: -0.5rem;
+  border-radius: 12px;
+  transition: var(--transition-fast);
+}
+
+
+.actor:hover {
+  background: rgba(99, 102, 241, 0.1);
+}
+
+
+.actor-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(99, 102, 241, 0.3);
+  transition: var(--transition-fast);
+}
+
+
+.actor:hover .actor-image {
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+
+.actor-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--white);
+  margin: 0;
+}
+
+
+.character-name {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin: 0;
+}
+
+
+/* Buttons */
+.movie-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+
+.movie-buttons button {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+
+.movie-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+
+.movie-buttons button:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+
+.like-btn {
+  background: rgba(236, 72, 153, 0.1);
+  color: var(--secondary);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+
+.like-btn:hover {
+  background: rgba(236, 72, 153, 0.2);
+  border-color: var(--secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+
+
+.like-btn.liked {
+  background: var(--gradient-secondary);
+  color: white;
+  border-color: transparent;
+  animation: likeAnimation 0.6s ease;
+}
+
+
+@keyframes likeAnimation {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(0.9) rotate(-5deg); }
+  50% { transform: scale(1.15) rotate(5deg); }
+  75% { transform: scale(1.05) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+
+.details-btn {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--primary-light);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+
+.details-btn:hover {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+
+/* Loading state */
+.movie-item.loading {
+  animation: pulse 2s infinite;
+}
+
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  #favoritesList {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 2rem;
+  }
+ 
+  .movie-poster {
+    height: 220px;
+  }
+ 
+  .movie-info {
+    padding: 1.5rem;
+  }
+ 
+  .movie-info h3 {
+    font-size: 1.5rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  header {
+    padding: 2rem 1rem;
+  }
+ 
+  h1 {
+    font-size: 2rem;
+  }
+ 
+  .movie-buttons {
+    flex-direction: column;
+  }
+ 
+  .movie-buttons button {
+    width: 100%;
+  }
+}
+
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+
+::-webkit-scrollbar-track {
+  background: var(--dark-lighter);
+}
+
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+
+/* Selection color */
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+
+/* ------------------ */
+/* Modal Background */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.9); /* Dark translucent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.35s ease;
+  backdrop-filter: blur(6px); /* subtle blur behind modal */
+}
+
+
+/* Hide modal with fade out */
+.modal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+
+/* Modal Content Box */
+.modal-content {
+  background: var(--dark-lighter);
+  color: var(--light);
+  padding: 2.5rem 3rem;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 20px;
+  box-shadow: var(--shadow-xl);
+  position: relative;
+  font-size: 1rem;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+
+
+  /* Entrance animation */
+  transform: translateY(0);
+  animation: modalEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+
+/* Entrance keyframe */
+@keyframes modalEnter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* Close Button */
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--primary-light);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.25s ease, transform 0.25s ease;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
+}
+
+
+.close-btn:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+  transform: rotate(90deg) scale(1.1);
+  box-shadow: 0 0 16px var(--primary);
+}
+
+
+/* Scrollbar styling for modal content */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+
+.modal-content::-webkit-scrollbar-track {
+  background: var(--dark);
+}
+
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 6px;
+}
+
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+  }
+
+
+  .close-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+    top: 10px;
+    right: 14px;
+  }
+}
+
+
+#movieModal .modal-header {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+#movieModal .modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+}
+#movieModal .modal-main {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+#movieModal .modal-poster img {
+  width: 180px;
+  border-radius: 8px;
+}
+#movieModal .modal-info {
+  flex: 1;
+}
+#movieModal .modal-info p {
+  margin: 8px 0;
+}
+
+
+#movieModal .modal-description {
+  margin-top: 20px;
+}
+#movieModal .modal-description h3 {
+  margin-bottom: 5px;
+}
+
+
+#movieModal .modal-cast {
+  margin-top: 20px;
+}
+#movieModal .modal-cast ul {
+  list-style: none;
+  padding: 0;
+}
+#movieModal .modal-cast li {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+#movieModal .modal-cast img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+ :root {
+            --primary-color: #222831;
+            --secondary-color: #222831;
+            --accent-color: #222831;
+            --text-color: #DFD0B8;
+            --hover-color: #948979;
+            --transition: all 0.3s ease;
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ffffff;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        /* Navigation */
+        .navbar {
+          position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+           
+        }
+        .navbar.scrolled {
+    background: #0d1117; /* Darker when scrolled */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links > li {
+            position: relative;
+        }
+
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            top: 4px;
+            font-size: 1rem;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: var(--transition);
+        }
+
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--hover-color);
+            transition: var(--transition);
+        }
+
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--hover-color);
+        }
+
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+
+        .dropbtn {
+            background: none;
+            color: var(--text-color);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+
+        .dropdown:hover .dropbtn {
+            color: var(--hover-color);
+        }
+
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: #393e467b;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: var(--transition);
+        }
+
+
+        .dropdown-content a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 20px;
+            color: var(--hover-color);
+        }
+
+
+        .dropdown-content a i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+
+
+        /* Logo */
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .hero-section {
+            width: 100%;
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url('images/head.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: relative;
+            position: relative;
+           
+        }
+
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .search-container {
+          top: -36px;
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            margin-top: 368px;
+        }
+        #id2 {
+            height: 60px;
+            border-radius: 30px 0 0 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            padding: 0 25px;
+            font-size: 16px;
+            color: white;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+
+        #id2:focus {
+            border-color: var(--hover-color);
+            box-shadow: 0 0 0 3px rgba(148, 137, 121, 0.2);
+        }
+
+
+        #id2::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        #id3 {
+            height: 60px;
+            width: 60px;
+            border-radius: 0 30px 30px 0;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-left: none;
+            outline: none;
+            background-color: var(--hover-color);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        #id3:hover {
+            background-color: #7a6e5e;
+        }
+        .logo-img {
+            height: 50px;
+            width: auto;
+            transition: transform 0.3s ease;
+        }
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a121d;
+            color: #fff;
+            min-height: 100vh;
+            padding-bottom: 0;
+        }
+
+
+        .main-content {
+            padding: 50px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+
+        .footer {
+            background: linear-gradient(135deg, #0d1117 0%, #14163a82 100%);
+            color: #e6e6e6;
+            padding: 60px 0 30px;
+            border-top: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+        }
+
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+
+        .footer-section h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+        }
+
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+
+        .footer-section ul li a {
+            color: #DFD0B8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+            position: relative;
+            padding-left: 0;
+        }
+
+
+        .footer-section ul li a:hover {
+            color: #DFD0B8;
+            padding-left: 10px;
+            transform: translateX(5px);
+        }
+
+
+        .footer-section ul li a::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 2px;
+            background: #DFD0B8;
+            transition: width 0.3s ease;
+        }
+
+
+        .footer-section ul li a:hover::before {
+            width: 20px;
+        }
+
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #333 0%, #555 100%);
+            color: #DFD0B8;
+            text-decoration: none;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+        .social-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+
+        .social-link:hover::before {
+            left: 100%;
+        }
+
+
+        .social-link.facebook:hover { background: linear-gradient(135deg, #ff0000, #ff4444); }
+        .social-link.twitter:hover { background: linear-gradient(135deg, #ff0000, #ff4444); }
+        .social-link.instagram:hover { background: linear-gradient(135deg, #e1306c, #fd1d1d); }
+        .social-link.youtube:hover { background: linear-gradient(135deg, #ff0000, #ff4444); }
+
+
+        .newsletter {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px solid #333;
+        }
+
+
+        .newsletter h4 {
+            color: #fff;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+
+        .newsletter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px 15px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 0.95em;
+            transition: border-color 0.3s ease;
+        }
+
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+        }
+
+
+        .newsletter-input::placeholder {
+            color: #888;
+        }
+
+
+        .newsletter-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 30px;
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+
+        .footer-bottom p {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+
+        .footer-bottom-links {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+
+        .footer-bottom-links a {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+
+        .footer-bottom-links a:hover {
+            color: #fff;
+        }
+
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+           
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+           
+            .footer-bottom-links {
+                justify-content: center;
+            }
+           
+            .social-links {
+                justify-content: center;
+            }
+           
+            .newsletter-form {
+                flex-direction: column;
+            }
+           
+            .newsletter-input {
+                min-width: 100%;
+            }
+        }
+       
+
+JS:
+
+// DOM Elements
+const searchInput = document.getElementById('id2');
+const searchButton = document.getElementById('id3');
+const favoritesList = document.getElementById('favoritesList');
+const favoritesList1 = document.getElementById('favoritesList1');
+const categoryLinks = document.querySelectorAll('.dropdown-content a');
+
+
+// Movies data
+let movies = localStorage.getItem('movies') ? JSON.parse(localStorage.getItem('movies')) : [
+    {
+        id: 1,
+        title: "Inception",
+        director: "Christopher Nolan",
+        year: 2010,
+        favorite: true,
+        genre: "Action, Sci-Fi",
+        description: "A thief steals corporate secrets using dream-sharing technology.",
+        poster: "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRRyuWmayVBvqjd1MxTKpRgauq2cCtUzb7Q9QvaFTkAuxAU_EYMoCE3wBuJeftxIzf0grreIw",
+        actors: [
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Leonardo_Dicaprio_Cannes_2019.jpg/250px-Leonardo_Dicaprio_Cannes_2019.jpg",
+                actor_name: "Leonardo DiCaprio",
+                character_name: "Cobb",
+            },
+        ],
+    },
+    {
+        id: 2,
+        title: "Interstellar",
+        director: "Christopher Nolan",
+        year: 2014,
+        favorite: true,
+        genre: "Adventure, Drama, Sci-Fi",
+        description: "Explorers travel through a wormhole in space to ensure humanity's survival.",
+        poster: "https://m.media-amazon.com/images/I/91kFYg4fX3L._AC_SL1500_.jpg",
+        actors: [
+            {
+                image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Matthew_McConaughey_2019_%2848648344772%29.jpg/960px-Matthew_McConaughey_2019_%2848648344772%29.jpg",
+                actor_name: "Matthew McConaughey",
+                character_name: "Cooper",
+            },
+        ],
+    },
+    {
+        id: 3,
+        title: "The Matrix",
+        director: "Wachowski Sisters",
+        favorite: false,
+        year: 1999,
+        genre: "Action, Sci-Fi",
+        description: "A hacker learns about the true nature of reality and fights against it.",
+        poster: "https://m.media-amazon.com/images/I/51EG732BV3L._AC_.jpg",
+        actors: [
+            {
+                image: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcR-USyI8VIxs8XSqJ5JOPwSEobozghRsN5yMgvLg7Ev9qfttsnjsPgyEpa7je9OHdgf3C-arTy8eFAVJpqTrNTt2A",
+                actor_name: "Keanu Reeves",
+                character_name: "Neo",
+            },
+        ],
+    }
+];
+
+
+// Initialize the app
+document.addEventListener("DOMContentLoaded", function() {
+    // Save to localStorage if not already saved
+    if (!localStorage.getItem('movies')) {
+        localStorage.setItem('movies', JSON.stringify(movies));
+    }
+
+
+    // Set up navbar
+    setupNavbar();
+   
+    // Initial render
+    renderAllMovies();
+});
+
+
+// Update localStorage
+function updateLocalStorage() {
+    localStorage.setItem('movies', JSON.stringify(movies));
+}
+// Create movie card HTML
+function createMovieCard(movie) {
+    return `
+        <div class="movie-item" data-id="${movie.id}">
+            <div class="movie-info">
+                <h3>${movie.title}</h3>
+                <p class="genre">Genre: ${movie.genre}</p>
+                <div class="movie-buttons">
+                    <button class="like-btn" data-id="${movie.id}">
+                        ${movie.favorite ? "❤ Liked" : "🤍 Like"}
+                    </button>
+                    <button class="details-btn" data-id="${movie.id}">
+                        ℹ️ Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+// Display movies in a container
+function displayMovies(container, moviesToDisplay, title = '') {
+    container.innerHTML = title ? `<h2>${title}</h2>` : '';
+   
+    if (moviesToDisplay.length === 0) {
+        container.innerHTML += '<p>No movies found.</p>';
+        return;
+    }
+   
+    moviesToDisplay.forEach(movie => {
+        container.innerHTML += createMovieCard(movie);
+    });
+   
+    // Add event listeners to buttons
+    setupEventListeners();
+}
+
+
+// Setup event listeners for buttons
+function setupEventListeners() {
+    // Like buttons
+    document.querySelectorAll('.like-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const movieId = parseInt(e.target.getAttribute('data-id'));
+            likeMovie(movieId);
+        });
+    });
+   
+    // Details buttons
+    document.querySelectorAll('.details-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const movieId = parseInt(e.target.getAttribute('data-id'));
+            showDetailsPopup(movieId);
+        });
+    });
+}
+
+
+// Toggle favorite status
+function likeMovie(movieId) {
+    const movieIndex = movies.findIndex(movie => movie.id === movieId);
+    if (movieIndex !== -1) {
+        movies[movieIndex].favorite = !movies[movieIndex].favorite;
+        updateLocalStorage();
+        renderAllMovies();
+    }
+}
+
+
+// Show movie details in modal
+function showDetailsPopup(id) {
+    const movie = movies.find((movie) => movie.id === id);
+    const modal = document.getElementById("movieModal");
+    const modalBody = document.getElementById("modalBody");
+
+
+    if (!movie) return;
+
+
+    modalBody.innerHTML = `
+        <div class="modal-header">
+            <h2>${movie.title} <span class="modal-year">(${movie.year})</span></h2>
+        </div>
+        <div class="modal-main">
+            <div class="modal-poster">
+                <img src="${movie.poster}" alt="${movie.title}" />
+            </div>
+            <div class="modal-info">
+                <p><strong>Director:</strong> ${movie.director}</p>
+                <p><strong>Genre:</strong> ${movie.genre}</p>
+                <p><strong>Status:</strong> ${movie.favorite ? '❤ Liked' : '🤍 Not Liked'}</p>
+            </div>
+        </div>
+        <div class="modal-description">
+            <h3>Description</h3>
+            <p>${movie.description}</p>
+        </div>
+        <div class="modal-cast">
+            <h3>Cast</h3>
+            <ul>
+                ${movie.actors.map(actor => `
+                    <li>
+                        <img src="${actor.image}" alt="${actor.actor_name}" />
+                        <strong>${actor.actor_name}</strong> as <em>${actor.character_name}</em>
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+    `;
+
+
+    modal.classList.remove("hidden");
+}
+
+
+// Search movies by title
+function searchMovies() {
+    const searchTerm = searchInput.value.toLowerCase().trim();
+   
+    if (searchTerm === '') {
+        renderAllMovies();
+        return;
+    }
+   
+    const filteredMovies = movies.filter(movie =>
+        movie.title.toLowerCase().includes(searchTerm)
+    );
+   
+    displayMovies(favoritesList, filteredMovies, `Search Results for "${searchTerm}"`);
+}
+
+
+// Filter movies by category
+function filterByCategory(category) {
+    const filteredMovies = movies.filter(movie =>
+        movie.genre.toLowerCase().includes(category.toLowerCase())
+    );
+   
+    displayMovies(favoritesList, filteredMovies, `${category} Movies`);
+}
+
+
+// Render all movies (both favorites and regular)
+function renderAllMovies() {
+    displayMovies(favoritesList, movies);
+    displayMovies(favoritesList1, movies.filter(movie => movie.favorite), "Favorite Movies");
+}
+
+
+// Close modal
+document.querySelector('.close-btn').addEventListener('click', () => {
+    document.getElementById('movieModal').classList.add('hidden');
+});
+
+
+document.getElementById('movieModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('movieModal')) {
+        document.getElementById('movieModal').classList.add('hidden');
+    }
+});
+
+
+// Event listeners for search
+searchButton.addEventListener('click', searchMovies);
+searchInput.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') {
+        searchMovies();
+    }
+});
+
+
+// Event listeners for category filtering
+categoryLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = link.textContent.replace(/^\w+\s/, ''); // Remove icon text
+        filterByCategory(category);
+    });
+});
+
+
+// Setup navbar functionality
+function setupNavbar() {
+    // Navbar active state
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            navLinks.forEach(lnk => lnk.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+   
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.matches('.dropbtn')) {
+            const dropdowns = document.getElementsByClassName('dropdown-content');
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.style.display === 'block') {
+                    openDropdown.style.display = 'none';
+                }
+            }
+        }
+    });
+   
+    // Toggle dropdown menu
+    document.querySelector('.dropbtn').addEventListener('click', function(e) {
+        e.stopPropagation();
+        const dropdown = this.nextElementSibling;
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+   
+    // Navbar scroll effect
+    const navbar = document.querySelector('.navbar');
+    const heroSection = document.querySelector('.hero-section');
+   
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 10) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+   
+    // Adjust hero section height
+    function adjustHeroHeight() {
+        const navbarHeight = navbar.offsetHeight;
+        heroSection.style.paddingTop = `${navbarHeight}px`;
+    }
+   
+    adjustHeroHeight();
+    window.addEventListener('resize', adjustHeroHeight);
+}
